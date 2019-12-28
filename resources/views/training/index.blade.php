@@ -12,6 +12,9 @@
                 <th>TKP</th>
                 <th>TPA</th>
                 <th>TBI</th>
+                <th>Gender</th>
+                <th>Asal Kota</th>
+                <th>Hasil</th>
             </tr>
             @foreach ($participants as $participant)
             <tr>
@@ -21,6 +24,9 @@
                 <td>{{ $participant->result->tkp_result }}</td>
                 <td>{{ $participant->result->tpa_result }}</td>
                 <td>{{ $participant->result->tbi_result }}</td>
+                <td>{{ $participant->gender }}</td>
+                <td>{{ $participant->origin }}</td>
+                <td>{{ $participant->result->test_result }}</td>
             </tr>
             @endforeach
         </table>

@@ -31,6 +31,7 @@ class ParticipantAndResultSeeder extends Seeder
                 'tkp' => $this->resultDictionary($line[3]),
                 'tpa' => $this->resultDictionary($line[4]),
                 'tbi' => $this->resultDictionary($line[5]),
+                'result' => $this->testResult($line[8])
             ]);
 
             if ($result) {
@@ -76,6 +77,22 @@ class ParticipantAndResultSeeder extends Seeder
                 return 3;
             default:
                 return 0;
+        }
+    }
+
+    /**
+     * convert string from test result CSV into integer value
+     * 
+     * @param string $result
+     * 
+     * @return int
+     */
+    protected function testResult($result)
+    {
+        if ($result == 'LULUS') {
+            return 1;
+        } else {
+            return 0;
         }
     }
 }

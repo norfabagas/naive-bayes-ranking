@@ -12,7 +12,8 @@ class Result extends Model
         'tiu',
         'tkp',
         'tpa',
-        'tbi'
+        'tbi',
+        'result'
     ];
 
     /**
@@ -64,6 +65,14 @@ class Result extends Model
     }
 
     /**
+     * return human readable test result
+     */
+    public function getTestResultAttribute()
+    {
+        return $this->testResult($this->result);
+    }
+
+    /**
      * convert test value to human readable string
      * 
      * @param integer $value
@@ -79,6 +88,20 @@ class Result extends Model
                 return 'TINGGI';
             default:
                 return 'undefined';
+        }
+    }
+
+    /**
+     * convert test result value to human readable string
+     * 
+     * @param integer $result
+     */
+    protected function testResult($result)
+    {
+        if ($result > 0) {
+            return 'LULUS';
+        } else {
+            return 'TIDAK LULUS';
         }
     }
 }

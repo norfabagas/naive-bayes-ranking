@@ -21,6 +21,7 @@ class CreateResultsTable extends Migration
             $table->integer('tkp');
             $table->integer('tpa');
             $table->integer('tbi');
+            $table->string('result');
             $table->timestamps();
             
             $table->foreign('participant_id')->references('id')->on('participants')->onDelete('cascade')->onUpdate('cascade');
