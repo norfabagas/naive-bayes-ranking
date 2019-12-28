@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Participant;
 use App\Result;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Illuminate\Console\Command;
 
 class ParticipantAndResultSeeder extends Seeder
 {
@@ -14,9 +14,16 @@ class ParticipantAndResultSeeder extends Seeder
      */
     public function run()
     {
-        $output = new ConsoleOutput;
+        // $output = new ConsoleOutput;
+        $command = new Command;
 
         $csv = $this->readCSV(__DIR__ . '/csv/training.csv');
+        // $count = $this->countCSV(__DIR__ . '/csv/training.csv');
+        $counter = count(file(__DIR__ . '/csv/training.csv', FILE_SKIP_EMPTY_LINES));
+        $count = $counter;
+
+        $this->command->getOutput()->progressStart($counter);
+
         foreach ($csv as $line) {
             $participant = Participant::create([
                 'name' => $line[0],
@@ -35,11 +42,13 @@ class ParticipantAndResultSeeder extends Seeder
             ]);
 
             if ($result) {
-                $output->writeln($participant->name . ' inserted');
+                $this->command->getOutput()->progressAdvance();
             } else {
-                $output->writeln('insert fail for ' . $participant->name);
+                // $output->writeln('insert fail for ' . $participant->name);
+                $command->line('insert fail for ' . $participant->name);
             }
         }
+        $this->command->getOutput()->progressFinish();
     }
 
     /**
@@ -57,6 +66,18 @@ class ParticipantAndResultSeeder extends Seeder
         }
         fclose($fileHandle);
         return $lines;
+    }
+
+    /**
+     * get total row in CSV file
+     * 
+     * @param string $csvFile
+     * 
+     * @return integer rows 
+     */
+    protected function countCSV($csvFile)
+    {
+        return count(file($csvFile, FILE_SKIP_EMPTY_LINES));
     }
 
     /**
