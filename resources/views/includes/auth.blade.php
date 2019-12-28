@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Menu
+                </div>
+                <div class="card-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('training.index') }}">Data Training</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('training.statistic') }}">Statistik</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('training.test') }}">Pengujian</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            @yield('content')
+        </div>
+    </div>
+</div>
