@@ -41,16 +41,30 @@ class ParticipantAndResultSeeder extends Seeder
         }
     }
 
+    /**
+     * function to read CSV file
+     * 
+     * @param string $csvFile
+     * 
+     * @return array $lines
+     */
     protected function readCSV($csvFile)
     {
-        $file_handle = fopen($csvFile, 'r');
-        while (!feof($file_handle) ) {
-            $line_of_text[] = fgetcsv($file_handle, 0);
+        $fileHandle = fopen($csvFile, 'r');
+        while (!feof($fileHandle) ) {
+            $lines[] = fgetcsv($fileHandle, 0);
         }
-        fclose($file_handle);
-        return $line_of_text;
+        fclose($fileHandle);
+        return $lines;
     }
 
+    /**
+     * convert string from CSV into integer value
+     * 
+     * @param string $result
+     * 
+     * @return int
+     */
     protected function resultDictionary($result)
     {
         switch ($result) {

@@ -11,4 +11,9 @@ class Participant extends Model
         'gender',
         'origin'
     ];
+
+    public function result()
+    {
+        return $this->hasOne('App\Result');
+    }
 }
