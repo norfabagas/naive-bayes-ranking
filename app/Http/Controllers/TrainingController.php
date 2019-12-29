@@ -22,6 +22,8 @@ class TrainingController extends Controller
 
     /**
      * display all statistics and probabilities
+     * 
+     * @return Illuminate\View\View
      */
     public function statistic()
     {
@@ -40,6 +42,68 @@ class TrainingController extends Controller
         
         return view('training.statistic')
             ->with(compact(['testResult', 'twkResult', 'tiuResult', 'tkpResult', 'tpaResult', 'tbiResult', 'gender', 'origin']));
+    }
+
+    /**
+     * display test
+     * 
+     * @return Illuminate\View\View
+     */
+    public function test(Request $request)
+    {
+        // initiate used variables
+        $result = '';
+        $passedPrediction = $failedPrediction = 0;
+        $resultDict = [
+            0 => 'undefined',
+            1 => 'RENDAH',
+            2 => 'SEDANG',
+            3 => 'TINGGI'
+        ];
+
+        $classDict = [
+            0 => 'TIDAK LULUS',
+            1 => 'LULUS'
+        ];
+
+        if ($request->has(['name', 'twk', 'tiu', 'tkp', 'tpa', 'tbi', 'gender', 'origin', 'actual'])) {
+            $resultArray = $this->resultArray();
+            $results = Result::all();
+            
+            $passedPrediction = $this->result($results, 'twk')[$resultArray[$request->twk]] *
+                                $this->result($results, 'tiu')[$resultArray[$request->tiu]] *
+                                $this->result($results, 'tkp')[$resultArray[$request->tkp]] *
+                                $this->result($results, 'tpa')[$resultArray[$request->tpa]] *
+                                $this->result($results, 'tbi')[$resultArray[$request->tbi]] *
+                                $this->participantResultSingle($results, 'gender', $request->gender, 1) *
+                                $this->participantResultSingle($results, 'origin', $request->origin, 1) *
+                                $this->testResult($results)['passed'];
+            
+            $passedPrediction = round($passedPrediction * 100, 1);
+
+            $failedPrediction = $this->result($results, 'twk')[$resultArray[$request->twk + 3]] *
+                                $this->result($results, 'tiu')[$resultArray[$request->tiu + 3]] *
+                                $this->result($results, 'tkp')[$resultArray[$request->tkp + 3]] *
+                                $this->result($results, 'tpa')[$resultArray[$request->tpa + 3]] *
+                                $this->result($results, 'tbi')[$resultArray[$request->tbi + 3]] *
+                                $this->participantResultSingle($results, 'gender', $request->gender, 0) *
+                                $this->participantResultSingle($results, 'origin', $request->origin, 0) *
+                                $this->testResult($results)['failed'];
+
+            $failedPrediction = round($failedPrediction  * 100, 1);
+
+            if ($passedPrediction > $failedPrediction) {
+                $result = 'LULUS';
+            } else {
+                $result = 'TIDAK LULUS';
+            }
+
+        } else {
+            $result = '';
+        }
+
+        return view('training.test')
+            ->with(compact(['result', 'passedPrediction', 'failedPrediction', 'resultDict', 'classDict']));
     }
 
     /**
@@ -100,5 +164,39 @@ class TrainingController extends Controller
         ];
 
         return $gender;
+    }
+
+    /**
+     * result array
+     * 
+     * @return array
+     */
+    protected function resultArray()
+    {
+        return [
+            1 => 'low_passed',
+            2 => 'mid_passed',
+            3 => 'high_passed',
+            4 => 'low_failed',
+            5 => 'mid_failed',
+            6 => 'high_failed'
+        ];
+    }
+
+    /**
+     * participant result for single data
+     * 
+     * @param App\Result $results
+     * @param string $filter
+     * @param string $value
+     * @param integer $result
+     * 
+     * @return double 
+     */
+    protected function participantResultSingle($results, $filter, $value, $result)
+    {
+        return Participant::where($filter, $value)->whereHas('result', function ($query) use ($result) {
+            $query->where('result', $result);
+        })->count() / $results->where('result', 1)->count(); 
     }
 }
