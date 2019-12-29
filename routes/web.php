@@ -15,6 +15,6 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'TrainingController@index')->name('training.index');
-    Route::get('/statistic', 'TrainingController@index')->name('training.statistic');
+    Route::get('/statistic', 'TrainingController@statistic')->name('training.statistic');
     Route::get('/test', 'TrainingController@index')->name('training.test');
 });
