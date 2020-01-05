@@ -36,12 +36,9 @@ class TrainingController extends Controller
         $tkpResult = $this->result($results, 'tkp');
         $tpaResult = $this->result($results, 'tpa');
         $tbiResult = $this->result($results, 'tbi');
-
-        $gender = $this->participantResult($results, 'gender', ['LAKI', 'PEREMPUAN']);
-        $origin = $this->participantResult($results, 'origin', ['JABODETABEK', 'LUAR']);
         
         return view('training.statistic')
-            ->with(compact(['testResult', 'twkResult', 'tiuResult', 'tkpResult', 'tpaResult', 'tbiResult', 'gender', 'origin']));
+            ->with(compact(['testResult', 'twkResult', 'tiuResult', 'tkpResult', 'tpaResult', 'tbiResult']));
     }
 
     /**
@@ -66,7 +63,7 @@ class TrainingController extends Controller
             1 => 'LULUS'
         ];
 
-        if ($request->has(['name', 'twk', 'tiu', 'tkp', 'tpa', 'tbi', 'gender', 'origin', 'actual'])) {
+        if ($request->has(['name', 'twk', 'tiu', 'tkp', 'tpa', 'tbi'])) {
             $resultArray = $this->resultArray();
             $results = Result::all();
             
@@ -75,8 +72,6 @@ class TrainingController extends Controller
                                 $this->result($results, 'tkp')[$resultArray[$request->tkp]] *
                                 $this->result($results, 'tpa')[$resultArray[$request->tpa]] *
                                 $this->result($results, 'tbi')[$resultArray[$request->tbi]] *
-                                $this->participantResultSingle($results, 'gender', $request->gender, 1) *
-                                $this->participantResultSingle($results, 'origin', $request->origin, 1) *
                                 $this->testResult($results)['passed'];
             
             $passedPrediction = round($passedPrediction * 100, 1);
@@ -86,8 +81,6 @@ class TrainingController extends Controller
                                 $this->result($results, 'tkp')[$resultArray[$request->tkp + 3]] *
                                 $this->result($results, 'tpa')[$resultArray[$request->tpa + 3]] *
                                 $this->result($results, 'tbi')[$resultArray[$request->tbi + 3]] *
-                                $this->participantResultSingle($results, 'gender', $request->gender, 0) *
-                                $this->participantResultSingle($results, 'origin', $request->origin, 0) *
                                 $this->testResult($results)['failed'];
 
             $failedPrediction = round($failedPrediction  * 100, 1);
@@ -146,27 +139,6 @@ class TrainingController extends Controller
     }
 
     /**
-     * summarize participant gender
-     * 
-     * @param App\Result $results
-     * @param string $filter
-     * @param array $value
-     * 
-     * @return array $gender
-     */
-    protected function participantResult($results, $filter, $value)
-    {
-        $gender = [
-            'first_passed' => Participant::where($filter, $value[0])->whereHas('result', function ($query) { $query->where('result', 1); })->count() / $results->where('result', 1)->count(),
-            'first_failed' => Participant::where($filter, $value[0])->whereHas('result', function ($query) { $query->where('result', 0); })->count() / $results->where('result', 0)->count(),
-            'second_passed' => Participant::where($filter, $value[1])->whereHas('result', function ($query) { $query->where('result', 1); })->count() / $results->where('result', 1)->count(),
-            'second_failed' => Participant::where($filter, $value[1])->whereHas('result', function ($query) { $query->where('result', 0); })->count() / $results->where('result', 0)->count(),
-        ];
-
-        return $gender;
-    }
-
-    /**
      * result array
      * 
      * @return array
@@ -195,7 +167,7 @@ class TrainingController extends Controller
      */
     protected function participantResultSingle($results, $filter, $value, $result)
     {
-        return Participant::where($filter, $value)->whereHas('result', function ($query) use ($result) {
+        return Participant::where($filter, $value)->whereHas('results', function ($query) use ($result) {
             $query->where('result', $result);
         })->count() / $results->where('result', 1)->count(); 
     }

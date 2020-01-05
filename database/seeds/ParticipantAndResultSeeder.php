@@ -18,17 +18,13 @@ class ParticipantAndResultSeeder extends Seeder
         $command = new Command;
 
         $csv = $this->readCSV(__DIR__ . '/csv/training.csv');
-        // $count = $this->countCSV(__DIR__ . '/csv/training.csv');
         $counter = count(file(__DIR__ . '/csv/training.csv', FILE_SKIP_EMPTY_LINES));
-        $count = $counter;
 
         $this->command->getOutput()->progressStart($counter);
 
         foreach ($csv as $line) {
             $participant = Participant::create([
-                'name' => $line[0],
-                'gender' => $line[6],
-                'origin' => $line[7]
+                'name' => $line[0]
             ]);
 
             $result = Result::create([
@@ -44,7 +40,6 @@ class ParticipantAndResultSeeder extends Seeder
             if ($result) {
                 $this->command->getOutput()->progressAdvance();
             } else {
-                // $output->writeln('insert fail for ' . $participant->name);
                 $command->line('insert fail for ' . $participant->name);
             }
         }

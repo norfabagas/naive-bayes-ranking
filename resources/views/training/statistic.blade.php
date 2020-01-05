@@ -148,48 +148,6 @@
                 </table>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <table class="table table-hover">
-                    <tr>
-                        <th>Gender</th>
-                        <th>Lulus</th>
-                        <th>Tidak Lulus</th>
-                    </tr>
-                    <tr>
-                        <th>Laki</th>
-                        <th>{{ round($gender['first_passed'] * 100) }}%</th>
-                        <th>{{ round($gender['first_failed'] * 100) }}%</th>
-                    </tr>
-                    <tr>
-                        <th>Perempuan</th>
-                        <th>{{ round($gender['second_passed'] * 100) }}%</th>
-                        <th>{{ round($gender['second_failed'] * 100) }}%</th>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="col-md-6">
-                <table class="table table-hover">
-                    <tr>
-                        <th>Asal Kota</th>
-                        <th>Lulus</th>
-                        <th>Tidak Lulus</th>
-                    </tr>
-                    <tr>
-                        <th>JABODETABEK</th>
-                        <th>{{ round($origin['first_passed'] * 100) }}%</th>
-                        <th>{{ round($origin['first_failed'] * 100) }}%</th>
-                    </tr>
-                    <tr>
-                        <th>LUAR</th>
-                        <th>{{ round($origin['second_passed'] * 100) }}%</th>
-                        <th>{{ round($origin['second_failed'] * 100) }}%</th>
-                    </tr>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

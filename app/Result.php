@@ -21,7 +21,7 @@ class Result extends Model
      */
     public function participant()
     {
-        return $this->hasOne('App\Participant');
+        return $this->belongsTo('App\Participant');
     }
 
     /**

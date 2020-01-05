@@ -12,8 +12,8 @@ class Participant extends Model
         'origin'
     ];
 
-    public function result()
+    public function results()
     {
-        return $this->hasOne('App\Result');
+        return $this->hasMany('App\Result');
     }
 }
