@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Participant;
 use App\Result;
+use Illuminate\Support\Facades\Validator;
 
 class TrainingController extends Controller
 {
@@ -18,6 +19,27 @@ class TrainingController extends Controller
         $participants = Participant::paginate(10);
         return view('training.index')
             ->with(compact(['participants']));
+    }
+
+    /***
+     * handle excel submit
+     * 
+     * @return void
+     */
+    public function submit_excel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'excel' => 'required|file|mimes:csv,txt'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($validator);
+        }
+
+        
     }
 
     /**
