@@ -65,7 +65,7 @@ class TrainingController extends Controller
                     'tkp' => resultDictionary($line[3]),
                     'tpa' => resultDictionary($line[4]),
                     'tbi' => resultDictionary($line[5]),
-                    'result' => testResult($line[8])
+                    'result' => testResult($line[6])
                 ]);
             }
 
