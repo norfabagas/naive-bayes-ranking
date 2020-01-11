@@ -15,7 +15,8 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'TrainingController@index')->name('training.index');
-    Route::post('/', 'TrainingController@submit_excel')->name('training.submit_excel');
+    Route::post('/', 'TrainingController@submitExcel')->name('training.submitExcel');
     Route::get('/statistic', 'TrainingController@statistic')->name('training.statistic');
+    Route::get('/statistic/{test}', 'TrainingController@statisticDetail')->name('training.statistic.detail');
     Route::get('/test', 'TrainingController@test')->name('training.test');
 });

@@ -5,7 +5,7 @@
     <div class="card-header">Data Training</div>
     <div class="card-body">
         <div class="row">
-            <form method="POST" enctype="multipart/form-data" action="{{ route('training.submit_excel') }}">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('training.submitExcel') }}">
                 {{ csrf_field() }}
 
                 @error('excel')

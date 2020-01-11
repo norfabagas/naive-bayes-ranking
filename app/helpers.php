@@ -41,6 +41,8 @@ function testResult($result)
  * read csv file
  * 
  * @param string $csvFile
+ * 
+ * @return array $lines
  */
 function readCSV($csvFile)
 {
@@ -51,4 +53,20 @@ function readCSV($csvFile)
     fclose($fileHandle);
 
     return $lines;
+}
+
+/**
+ * available test
+ * 
+ * @return array
+ */
+function availableTest()
+{
+    return [
+        'twk',
+        'tiu',
+        'tkp',
+        'tpa',
+        'tbi'
+    ];
 }

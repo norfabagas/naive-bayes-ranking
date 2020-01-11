@@ -23,7 +23,11 @@
             <div class="col-md-6">
                 <table class="table table-hover">
                     <tr>
-                        <th>P (TWK)</th>
+                        <th>
+                            <a class="btn btn-primary" href="{{ route('training.statistic.detail', ['twk']) }}">
+                                P (TWK)
+                            </a>
+                        </th>
                         <th>Lulus</th>
                         <th>Tidak Lulus</th>
                     </tr>
@@ -50,7 +54,11 @@
             <div class="col-md-6">
                 <table class="table table-hover">
                     <tr>
-                        <th>P (TIU)</th>
+                        <th>
+                            <a class="btn btn-primary" href="{{ route('training.statistic.detail', ['tiu']) }}">
+                                P (TIU)
+                            </a>
+                        </th>
                         <th>Lulus</th>
                         <th>Tidak Lulus</th>
                     </tr>
@@ -75,7 +83,11 @@
             <div class="col-md-6">
                 <table class="table table-hover">
                     <tr>
-                        <th>P (TKP)</th>
+                        <th>
+                        <a class="btn btn-primary" href="{{ route('training.statistic.detail', ['tkp']) }}">
+                            P (TKP)
+                        </a>
+                        </th>
                         <th>Lulus</th>
                         <th>Tidak Lulus</th>
                     </tr>
@@ -102,7 +114,11 @@
             <div class="col-md-6">
                 <table class="table table-hover">
                     <tr>
-                        <th>P (TPA)</th>
+                        <th>
+                            <a class="btn btn-primary" href="{{ route('training.statistic.detail', ['tpa']) }}">
+                                P (TPA)
+                            </a>
+                        </th>
                         <th>Lulus</th>
                         <th>Tidak Lulus</th>
                     </tr>
@@ -126,7 +142,11 @@
             <div class="col-md-6">
                 <table class="table table-hover">
                     <tr>
-                        <th>P (TBI)</th>
+                        <th>
+                            <a class="btn btn-primary" href="{{ route('training.statistic.detail', ['tbi']) }}">
+                                P (TBI)
+                            </a>
+                        </th>
                         <th>Lulus</th>
                         <th>Tidak Lulus</th>
                     </tr>

@@ -29,7 +29,7 @@ class TrainingController extends Controller
      * 
      * @return void
      */
-    public function submit_excel(Request $request)
+    public function submitExcel(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'excel' => 'required|file|mimes:csv,txt'
@@ -100,6 +100,28 @@ class TrainingController extends Controller
         
         return view('training.statistic')
             ->with(compact(['testResult', 'twkResult', 'tiuResult', 'tkpResult', 'tpaResult', 'tbiResult']));
+    }
+
+    /**
+     * display detailed statistic based on test type
+     * 
+     * @param string $test
+     * 
+     * @return Illuminate\View\View
+     */
+    public function statisticDetail($test)
+    {
+        if (!in_array($test, availableTest())) {
+            return redirect()
+                ->route('training.statistic');
+        }
+
+        $results = Result::all();
+
+        $detailedResults = $this->getDetailedResults($results, $test);
+
+        return view('training.statistic_detail')
+            ->with(compact(['test', 'detailedResults']));
     }
 
     /**
@@ -231,5 +253,72 @@ class TrainingController extends Controller
         return Participant::where($filter, $value)->whereHas('results', function ($query) use ($result) {
             $query->where('result', $result);
         })->count() / $results->where('result', 1)->count(); 
+    }
+
+    /**
+     * get detailed results 
+     * 
+     * @param App\Result $results
+     * @param string $test
+     * 
+     * @return array $results
+     */
+    protected function getDetailedResults($results, $test)
+    {
+        $detailedResults = [];
+
+        $detailedResults['low_failed'] = $this->getNameFromResults($test, 1, 0);
+        $detailedResults['low_failed_count'] = $this->getNameFromResults($test, 1, 0, 'count');
+        $detailedResults['low_passed'] = $this->getNameFromResults($test, 1, 1);
+        $detailedResults['low_passed_count'] = $this->getNameFromResults($test, 1, 1, 'count');
+        
+        $detailedResults['mid_failed'] = $this->getNameFromResults($test, 2, 0);
+        $detailedResults['mid_failed_count'] = $this->getNameFromResults($test, 2, 0, 'count');
+        $detailedResults['mid_passed'] = $this->getNameFromResults($test, 2, 1);
+        $detailedResults['mid_passed_count'] = $this->getNameFromResults($test, 2, 1, 'count');
+        
+        $detailedResults['high_failed'] = $this->getNameFromResults($test, 3, 0);
+        $detailedResults['high_failed_count'] = $this->getNameFromResults($test, 3, 0, 'count');
+        $detailedResults['high_passed'] = $this->getNameFromResults($test, 3, 1);
+        $detailedResults['high_passed_count'] = $this->getNameFromResults($test, 3, 1, 'count');
+
+        $detailedResults['low_count'] = ($detailedResults['low_failed_count'] > $detailedResults['low_passed_count']) ? $detailedResults['low_failed_count'] : $detailedResults['low_passed_count'];
+        $detailedResults['mid_count'] = ($detailedResults['mid_failed_count'] > $detailedResults['mid_passed_count']) ? $detailedResults['mid_failed_count'] : $detailedResults['mid_passed_count'];
+        $detailedResults['high_count'] = ($detailedResults['high_failed_count'] > $detailedResults['high_passed_count']) ? $detailedResults['high_failed_count'] : $detailedResults['high_passed_count'];
+
+        // dd($detailedResults);
+        
+
+        return $detailedResults;
+    }
+
+    /**
+     * helper for getDetailedResults method
+     * 
+     * @param string $test
+     * @param integer $testResult
+     * @param integer $result
+     * @param string $type (count, get)
+     * 
+     * @return array $names
+     */
+    protected function getNameFromResults($test, $testResult, $result, $type = 'get')
+    {
+        $names = DB::table('results')
+            ->join('participants', 'results.participant_id', '=', 'participants.id')
+            ->select('participants.name AS name')
+            ->where($test, $testResult)
+            ->where('result', $result);
+        
+        if ($type == 'get') {
+            return $names
+                ->get()
+                ->toArray();
+        } else if ($type == 'count') {
+            return $names
+                ->count();
+        } else {
+            return [];
+        }
     }
 }
