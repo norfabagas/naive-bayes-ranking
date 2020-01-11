@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Participant;
 use App\Result;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class TrainingController extends Controller
@@ -39,7 +42,43 @@ class TrainingController extends Controller
                 ->withErrors($validator);
         }
 
-        
+        try {
+            $csv = readCSV($request->file('excel')->getRealPath());
+    
+            DB::beginTransaction();
+
+            Participant::query()->delete();            
+
+            foreach ($csv as $line) {
+                if ($line == false) {
+                    continue;
+                }
+
+                $participant = Participant::create([
+                    'name' => $line[0]
+                ]);
+    
+                Result::create([
+                    'participant_id' => $participant->id,
+                    'twk' => resultDictionary($line[1]),
+                    'tiu' => resultDictionary($line[2]),
+                    'tkp' => resultDictionary($line[3]),
+                    'tpa' => resultDictionary($line[4]),
+                    'tbi' => resultDictionary($line[5]),
+                    'result' => testResult($line[8])
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            abort(403, $e->getMessage());
+        }
+
+        Session::flash('message', 'Data stored');
+
+        return redirect()
+            ->route('training.index');
     }
 
     /**

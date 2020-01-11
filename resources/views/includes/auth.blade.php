@@ -1,5 +1,13 @@
 <div class="container">
+    @if(Session::has('message'))
+    <div class="alert alert-success alert-dismissable fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ Session::get('message') }}
+    </div>
+    @endif
     <div class="row">
+
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">

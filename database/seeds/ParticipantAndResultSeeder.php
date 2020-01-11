@@ -17,7 +17,7 @@ class ParticipantAndResultSeeder extends Seeder
         // $output = new ConsoleOutput;
         $command = new Command;
 
-        $csv = $this->readCSV(__DIR__ . '/csv/training.csv');
+        $csv = readCSV(__DIR__ . '/csv/training.csv');
         $counter = count(file(__DIR__ . '/csv/training.csv', FILE_SKIP_EMPTY_LINES));
 
         $this->command->getOutput()->progressStart($counter);
@@ -29,12 +29,12 @@ class ParticipantAndResultSeeder extends Seeder
 
             $result = Result::create([
                 'participant_id' => $participant->id,
-                'twk' => $this->resultDictionary($line[1]),
-                'tiu' => $this->resultDictionary($line[2]),
-                'tkp' => $this->resultDictionary($line[3]),
-                'tpa' => $this->resultDictionary($line[4]),
-                'tbi' => $this->resultDictionary($line[5]),
-                'result' => $this->testResult($line[8])
+                'twk' => resultDictionary($line[1]),
+                'tiu' => resultDictionary($line[2]),
+                'tkp' => resultDictionary($line[3]),
+                'tpa' => resultDictionary($line[4]),
+                'tbi' => resultDictionary($line[5]),
+                'result' => testResult($line[8])
             ]);
 
             if ($result) {
@@ -47,23 +47,6 @@ class ParticipantAndResultSeeder extends Seeder
     }
 
     /**
-     * function to read CSV file
-     * 
-     * @param string $csvFile
-     * 
-     * @return array $lines
-     */
-    protected function readCSV($csvFile)
-    {
-        $fileHandle = fopen($csvFile, 'r');
-        while (!feof($fileHandle) ) {
-            $lines[] = fgetcsv($fileHandle, 0);
-        }
-        fclose($fileHandle);
-        return $lines;
-    }
-
-    /**
      * get total row in CSV file
      * 
      * @param string $csvFile
@@ -73,42 +56,5 @@ class ParticipantAndResultSeeder extends Seeder
     protected function countCSV($csvFile)
     {
         return count(file($csvFile, FILE_SKIP_EMPTY_LINES));
-    }
-
-    /**
-     * convert string from CSV into integer value
-     * 
-     * @param string $result
-     * 
-     * @return int
-     */
-    protected function resultDictionary($result)
-    {
-        switch ($result) {
-            case 'RENDAH':
-                return 1;
-            case 'SEDANG':
-                return 2;
-            case 'TINGGI':
-                return 3;
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * convert string from test result CSV into integer value
-     * 
-     * @param string $result
-     * 
-     * @return int
-     */
-    protected function testResult($result)
-    {
-        if ($result == 'LULUS') {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }
