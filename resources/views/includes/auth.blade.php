@@ -15,12 +15,14 @@
                 </div>
                 <div class="card-body">
                     <ul class="nav flex-column">
+                        @if (auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('training.index') }}">Data Training</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('training.statistic') }}">Statistik</a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('training.test') }}">Pengujian</a>
                         </li>

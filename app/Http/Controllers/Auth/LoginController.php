@@ -40,6 +40,10 @@ class LoginController extends Controller
 
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        return redirect('/');
+        if ($user->role == 'admin') {
+            return redirect('/');
+        } else {
+            return redirect()->route('training.test');
+        }
     }
 }

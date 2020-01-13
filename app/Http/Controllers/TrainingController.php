@@ -19,6 +19,10 @@ class TrainingController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->role == 'teacher') {
+            return redirect()->route('training.test');
+        }
+
         $participants = Participant::paginate(10);
         return view('training.index')
             ->with(compact(['participants']));
@@ -31,6 +35,10 @@ class TrainingController extends Controller
      */
     public function submitExcel(Request $request)
     {
+        if (auth()->user()->role == 'teacher') {
+            return redirect()->route('training.test');
+        }
+
         $validator = Validator::make($request->all(), [
             'excel' => 'required|file|mimes:csv,txt'
         ]);
@@ -88,6 +96,10 @@ class TrainingController extends Controller
      */
     public function statistic()
     {
+        if (auth()->user()->role == 'teacher') {
+            return redirect()->route('training.test');
+        }
+
         $results = Result::all();
 
         $testResult = $this->testResult($results);
