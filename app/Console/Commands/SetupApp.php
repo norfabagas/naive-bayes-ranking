@@ -49,13 +49,22 @@ class SetupApp extends Command
         Artisan::call('db:seed');
         $this->info('Seeding success');
 
-        $this->line('Create default user');
+        $this->line('Create default users');
         DB::table('users')->insert([
             'name' => 'admin',
             'email' => 'admin@mail.com',
-            'password' => bcrypt('password')
+            'password' => bcrypt('password'),
+            'role' => 'admin'
         ]);
-        $this->info('User created. email = admin@mail.com | password = password');
+        $this->info('User created. email = admin@mail.com | password = password | role = admin');
+
+        DB::table('users')->insert([
+            'name' => 'teacher',
+            'email' => 'teacher@mail.com',
+            'password' => bcrypt('password'),
+            'role' => 'teacher'
+        ]);
+        $this->info('User created. email = teacher@mail.com | password = password | role = teacher');
 
         $this->info('Finish running all required tasks');
 
