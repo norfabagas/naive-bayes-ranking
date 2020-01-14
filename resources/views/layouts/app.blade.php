@@ -41,7 +41,10 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login as Admin') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login.teacher') }}">{{ __('Login as Teacher') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">

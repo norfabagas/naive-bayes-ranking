@@ -38,8 +38,42 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Show the application's login form for teacher.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginFormForTeacher()
+    {
+        return view('auth.login_teacher');
+    }
+
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
+        if ($request->role == 'admin') {
+            $redirector = '/login';
+        } else if ($request->role == 'teacher') {
+            $redirector = '/login/teacher';
+        }
+
+        if ($request->role !== $user->role) {
+            $this->guard()->logout();
+
+            $request->session()->invalidate();
+
+            return $this->loggedOut($request) ?: redirect($redirector);
+        }
+
         if ($user->role == 'admin') {
             return redirect('/');
         } else {

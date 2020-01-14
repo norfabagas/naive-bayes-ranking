@@ -13,6 +13,8 @@
 
 Auth::routes();
 
+Route::get('login/teacher', 'Auth\LoginController@showLoginFormForTeacher')->name('login.teacher');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'TrainingController@index')->name('training.index');
     Route::post('/', 'TrainingController@submitExcel')->name('training.submitExcel');

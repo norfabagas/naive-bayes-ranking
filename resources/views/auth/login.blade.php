@@ -5,11 +5,17 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header">
+                    {{ __('Login as Admin') }}
+                    <span class="float-right">
+                        {{ Illuminate\Support\Carbon::now()->format('d-m-Y') }}
+                    </span>
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
+                        <input type="hidden" name="role" value="admin">
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
